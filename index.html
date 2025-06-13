@@ -1,102 +1,36 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Proyecto Ninja Creativo</title>
-  <!-- Tailwind CSS via CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- React & ReactDOM via UMD -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demo React Counter</title>
+  <!-- React & ReactDOM UMD -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-  <!-- Babel for JSX transformation -->
+  <!-- Babel para JSX en el navegador -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <!-- Framer Motion via UMD -->
-  <script src="https://unpkg.com/framer-motion/dist/framer-motion.umd.js"></script>
 </head>
-<body class="bg-gradient-to-br from-purple-300 via-pink-300 to-red-200 min-h-screen flex items-center justify-center p-4">
-  <div id="root" class="w-full max-w-4xl"></div>
+<body>
+  <div id="root"></div>
 
   <script type="text/babel">
-    const { motion } = window['framer-motion'];
     const { useState } = React;
 
-    function App() {
-      const items = [
-        { title: 'Creatividad', icon: '🎨' },
-        { title: 'Innovación', icon: '🚀' },
-        { title: 'Diseño', icon: '🖌️' },
-        { title: 'Arte', icon: '🖼️' }
-      ];
-      const [showMessage, setShowMessage] = useState(false);
-
+    function Counter() {
+      const [count, setCount] = useState(0);
       return (
-        <div>
-          <motion.header
-            initial={{ y: -50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-            className="text-center mb-12"
-          >
-            <h1 className="text-5xl font-bold text-white drop-shadow-lg">
-              Proyecto Ninja Creativo
-            </h1>
-            <p className="mt-2 text-lg text-white/90">
-              Una demo interactiva en React + Tailwind + Framer Motion.
-            </p>
-          </motion.header>
-
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{
-              hidden: {},
-              visible: { transition: { staggerChildren: 0.2 } }
-            }}
-          >
-            {items.map((item, idx) => (
-              <motion.div
-                key={idx}
-                className="bg-white rounded-2xl shadow-lg p-6 flex items-center space-x-4 hover:scale-105 transform transition"
-                whileHover={{ scale: 1.05 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-                onClick={() => setShowMessage(true)}
-                style={{ cursor: 'pointer' }}
-              >
-                <div className="text-4xl">{item.icon}</div>
-                <h2 className="text-xl font-semibold">{item.title}</h2>
-              </motion.div>
-            ))}
-          </motion.div>
-
-          <div className="mt-12 text-center">
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              className="px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold rounded-full shadow-lg focus:outline-none"
-              onClick={() => setShowMessage(!showMessage)}
-            >
-              {showMessage ? 'Ocultar mensaje' : '¡Haz clic aquí!'}
-            </motion.button>
-
-            {showMessage && (
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
-                className="mt-6 text-white text-xl"
-              >
-                ¡Gracias por unirte al Ninja Creativo! 🚀
-              </motion.p>
-            )}
-          </div>
+        <div style={{ textAlign: 'center', marginTop: '50px' }}>
+          <h1>Contador: {count}</h1>
+          <button onClick={() => setCount(count + 1)}>Incrementar</button>
+          <button onClick={() => setCount(count - 1)} style={{ marginLeft: '10px' }}>
+            Decrementar
+          </button>
         </div>
       );
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
+    root.render(<Counter />);
   </script>
 </body>
 </html>
