@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Kaleidoscopio React</title>
   <!-- React & ReactDOM UMD -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
@@ -10,8 +10,23 @@
   <!-- Babel para JSX en el navegador -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <style>
-    body, html { margin: 0; padding: 0; overflow: hidden; }
-    canvas { display: block; cursor: pointer; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: black;
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    canvas {
+      display: block;
+      cursor: pointer;
+      touch-action: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+    }
     .overlay {
       position: absolute;
       top: 20px;
@@ -87,7 +102,16 @@
         return () => window.removeEventListener('resize', draw);
       }, [draw]);
 
-      return <canvas ref={canvasRef} onClick={draw} title="Haz clic para regenerar" />;
+      return (
+        <canvas
+          ref={canvasRef}
+          onClick={(e) => {
+            e.preventDefault(); // evita comportamiento móvil inesperado
+            draw();
+          }}
+          title="Haz clic para regenerar"
+        />
+      );
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
