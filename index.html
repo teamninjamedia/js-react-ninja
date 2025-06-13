@@ -3,34 +3,95 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Demo React Counter</title>
+  <title>Kaleidoscopio React</title>
   <!-- React & ReactDOM UMD -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
   <!-- Babel para JSX en el navegador -->
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    body, html { margin: 0; padding: 0; overflow: hidden; }
+    canvas { display: block; cursor: pointer; }
+    .overlay {
+      position: absolute;
+      top: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-family: sans-serif;
+      font-size: 24px;
+      color: black;
+      z-index: 10;
+      pointer-events: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .overlay img {
+      height: 24px;
+      width: 24px;
+    }
+  </style>
 </head>
 <body>
+  <div class="overlay">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="Logo de React">
+    Proyecto hecho en React
+  </div>
   <div id="root"></div>
 
   <script type="text/babel">
-    const { useState } = React;
+    const { useRef, useEffect, useCallback } = React;
 
-    function Counter() {
-      const [count, setCount] = useState(0);
-      return (
-        <div style={{ textAlign: 'center', marginTop: '50px' }}>
-          <h1>Contador: {count}</h1>
-          <button onClick={() => setCount(count + 1)}>Incrementar</button>
-          <button onClick={() => setCount(count - 1)} style={{ marginLeft: '10px' }}>
-            Decrementar
-          </button>
-        </div>
-      );
+    function Kaleidoscope() {
+      const canvasRef = useRef(null);
+
+      const draw = useCallback(() => {
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const w = canvas.width = window.innerWidth;
+        const h = canvas.height = window.innerHeight;
+        ctx.clearRect(0, 0, w, h);
+
+        const segments = 12;
+        const angle = (2 * Math.PI) / segments;
+        const radius = Math.min(w, h) / 3;
+
+        for (let i = 0; i < segments; i++) {
+          ctx.save();
+          ctx.translate(w / 2, h / 2);
+          ctx.rotate(i * angle);
+
+          ctx.beginPath();
+          const x1 = Math.random() * radius;
+          const y1 = Math.random() * radius;
+          const x2 = Math.random() * radius;
+          const y2 = Math.random() * radius;
+
+          ctx.moveTo(0, 0);
+          ctx.lineTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.closePath();
+
+          ctx.fillStyle = `hsl(${Math.random() * 360}, 70%, 60%)`;
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }, []);
+
+      useEffect(() => {
+        draw();
+        window.addEventListener('resize', draw);
+        return () => window.removeEventListener('resize', draw);
+      }, [draw]);
+
+      return <canvas ref={canvasRef} onClick={draw} title="Haz clic para regenerar" />;
     }
 
     const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<Counter />);
+    root.render(<Kaleidoscope />);
   </script>
 </body>
 </html>
